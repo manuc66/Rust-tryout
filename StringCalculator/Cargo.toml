@@ -1,0 +1,5 @@
+[package]
+
+name = "StringCalculator"
+version = "0.0.1"
+authors = ["manuc66@gmail.com"]
