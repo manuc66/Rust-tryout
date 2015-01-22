@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 fn compute(input: &str) -> isize {
 	if is_empty(input) {
 		0
@@ -16,7 +18,7 @@ fn extract_numbers(input: &str) -> Vec<isize> {
 }
 
 fn parse_int(input: &str) -> isize {
-	from_str(input).unwrap()
+	FromStr::from_str(input).unwrap()
 }
 
 fn sum_of(numbers: Vec<isize>) -> isize {
