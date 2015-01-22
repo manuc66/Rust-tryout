@@ -1,21 +1,19 @@
-use std::default::Default;
-use cell::Cell;
 
 #[test]
 fn a_new_cell_have_no_value() {
-	let cell = cell::Cell { ..Default::default() };
+	let cell = Cell::new();
 	assert!(cell.get_value().is_none());
 }
 
 #[test]
 fn a_new_cell_have_6_possible_values() {
-	let cell = cell::Cell { ..Default::default() };
+	let cell = Cell::new();
 	assert_eq!(cell.how_many_possible(), 6);
 }
 
 #[test]
 fn by_default_anything_is_possible_in_a_cell() {
-	let cell = cell::Cell { ..Default::default() };
+	let cell = Cell::new();
 	assert!(cell.is_possible_value(1));
 	assert!(cell.is_possible_value(2));
 	assert!(cell.is_possible_value(3));
@@ -26,7 +24,7 @@ fn by_default_anything_is_possible_in_a_cell() {
 
 #[test]
 fn a_cell_keeps_track_of_which_values_are_possible() {
-	let mut cell = cell::Cell { ..Default::default() };
+	let mut cell = Cell::new();
 	cell.not_possible(3);
 	cell.not_possible(4);
 
@@ -37,7 +35,7 @@ fn a_cell_keeps_track_of_which_values_are_possible() {
 }
 #[test]
 fn if_only_one_possiblity_is_left_then_a_cell_knows_its_value() {
-	let mut cell = cell::Cell { ..Default::default() };
+	let mut cell = Cell::new();
 	cell.not_possible(1);
 	cell.not_possible(2);
 	
@@ -52,18 +50,17 @@ fn if_only_one_possiblity_is_left_then_a_cell_knows_its_value() {
 	assert_eq!(cell.is_possible_value(2), false);
 }
 
-mod cell {
-	use std::default::Default;
+
 	pub struct Cell {
 		value: Option<int>,
 		possible_values:     Vec<int>,
 	}
-	impl Default for Cell {
-		fn default () -> Cell {
-		    Cell { value : None, possible_values : Vec::from_fn(6, |idx| (idx + 1).to_int().unwrap()) }
-		}
-	}
 	impl Cell {
+		pub fn new() -> Cell { 
+			Cell { 
+				value : None, 
+				possible_values : Vec::from_fn(6, |idx| (idx + 1).to_int().unwrap()) }
+		}
 
 		pub fn get_value(&self) -> Option<int> {
 			self.value	
@@ -71,8 +68,6 @@ mod cell {
 
 		pub fn how_many_possible(&self) -> uint {
 			self.possible_values.len()
-		}
-		fn help(&self) {
 		}		
 	
 		pub fn not_possible(&mut self, value: int) {
@@ -86,4 +81,36 @@ mod cell {
 			self.possible_values.iter().any(|elem| *elem == value)
 		}
 	}
+
+#[test]
+fn a_grid_have_a_name() {
+	let grid = Grid::new("B");
+	assert_eq!(grid.name, "B");
 }
+
+#[test]
+fn a_grid_consists_of_3by2_cells() {
+	let grid = Grid::new("A");
+	assert_eq!(type_name_of(&grid.cells) , "[[Cell, ..2], ..3]");
+}
+
+pub struct Grid {
+	pub name: &'static str,
+	pub cells: [[Cell, ..2], ..3],
+}
+impl Grid {
+	pub fn new(name : &'static str) -> Grid { 
+		Grid { name : name, cells : 
+			[
+				[Cell::new(),Cell::new()],
+				[Cell::new(),Cell::new()],
+				[Cell::new(),Cell::new()],	
+			]
+		}
+	}
+}
+
+fn type_name_of<T>(_: &T) -> &'static str { 
+	unsafe { (*std::intrinsics::get_tydesc::<T>()).name } 
+}
+	
