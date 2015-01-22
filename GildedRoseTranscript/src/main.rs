@@ -14,7 +14,7 @@ struct Item {
 }
 
 fn update_quality(items: &mut[Item]) {
-	for i in range(0, items.len()) {
+	for i in (0..items.len()) {
         if items[i].name != "Aged Brie" && items[i].name != "Backstage passes to a TAFKAL80ETC concert"
         {
             if items[i].quality > 0

@@ -52,32 +52,33 @@ fn if_only_one_possiblity_is_left_then_a_cell_knows_its_value() {
 
 
 	pub struct Cell {
-		value: Option<int>,
-		possible_values:     Vec<int>,
+		value: Option<isize>,
+		possible_values:     Vec<isize>,
 	}
 	impl Cell {
 		pub fn new() -> Cell { 
 			Cell { 
 				value : None, 
-				possible_values : Vec::from_fn(6, |idx| (idx + 1).to_int().unwrap()) }
+				possible_values : (0..6).map(|idx| (idx + 1)).collect()
+			}
 		}
 
-		pub fn get_value(&self) -> Option<int> {
+		pub fn get_value(&self) -> Option<isize> {
 			self.value	
 		}
 
-		pub fn how_many_possible(&self) -> uint {
+		pub fn how_many_possible(&self) -> usize {
 			self.possible_values.len()
 		}		
 	
-		pub fn not_possible(&mut self, value: int) {
+		pub fn not_possible(&mut self, value: isize) {
 			self.possible_values.retain(|elem| *elem != value);
 			if self.how_many_possible() == 1 {
 				self.value = Some(self.possible_values[0]);			
 			}
 		}
 
-		pub fn is_possible_value(&self, value: int) -> bool {
+		pub fn is_possible_value(&self, value: isize) -> bool {
 			self.possible_values.iter().any(|elem| *elem == value)
 		}
 	}
@@ -91,12 +92,12 @@ fn a_grid_have_a_name() {
 #[test]
 fn a_grid_consists_of_3by2_cells() {
 	let grid = Grid::new("A");
-	assert_eq!(type_name_of(&grid.cells) , "[[Cell, ..2], ..3]");
+	assert_eq!(type_name_of(&grid.cells) , "[[Cell; 2]; 3]");
 }
 
 pub struct Grid {
 	pub name: &'static str,
-	pub cells: [[Cell, ..2], ..3],
+	pub cells: [[Cell; 2]; 3],
 }
 impl Grid {
 	pub fn new(name : &'static str) -> Grid { 
